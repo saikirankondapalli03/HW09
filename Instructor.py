@@ -24,6 +24,11 @@ class Instructor:
     def __str__(self):
         return (f"Instructor name: {self.name}  Instructor CWID: {self.cwid}  department: {self.department}")
 
+
+    def details(self):
+        for course,count in self.course_students.items():
+            yield [self.cwid,self.name,self.department,course,count]
+            
     def add_student(self,student):
         self.course_students[student] += 1
 

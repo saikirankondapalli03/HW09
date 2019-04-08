@@ -17,19 +17,25 @@ class Student:
         self.cwid= cwid
         self.name= name
         self.major = major
-        self.courses= defaultdict(str) 
+        self.completed_courses= dict()
+        self.remaining_courses= set()
+        self.elective_courses= dict()
         #defaultdict of course and grade {'810':'A' , '564':'A-'} or for this problem ['564','810']
             
     def __str__(self):
         return (f"student name: {self.name}  cwid: {self.cwid}  major: {self.major}")
+    
+    def details(self):
+        cwid= self.cwid
+        name =self.name
+        completed_courses = sorted(self.completed_courses.keys())
+        elective_courses= None if len(set(self.elective_courses.keys())) ==0 else set(self.elective_courses.keys())
+        remaining_courses = None if len(self.remaining_courses) ==0 else self.remaining_courses
+        return [self.cwid,self.name,self.major,completed_courses,remaining_courses,elective_courses]
 
-    def add_grade(self,course, grade):
-        self.courses[course] = grade
-
-if __name__ == '__main__':
-    #path = input("please enter the path of repository: ")
-    #read_students(path)
-    s1= Student(1010,"sai","MS in CE")
-    s1.add_grade('810','a')
-    s1.add_grade('564','a-')
-    print(s1.courses)
+    def add_grade(self,course, grade , major):
+        if course in major.electives:
+            self.elective_courses[course] = grade
+        else:
+            self.completed_courses[course] = grade
+            self.remaining_courses= set(major.required)-set(self.completed_courses.keys())
